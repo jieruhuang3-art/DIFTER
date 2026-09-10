@@ -1,0 +1,69 @@
+model:
+  name: DIFTER
+  max_windows: 16
+  vocab_size: 60005
+  max_seq_length: 128
+  hidden_size: 768
+  heads_num: 12
+  feedforward_size: 3072
+  context_layers: 12
+  intra_packet_layers: 1
+  inter_packet_layers: 2
+  field_slots: 32
+  dropout: 0.10
+  pretrained_backbone: null
+
+dimensions:
+  backbone: 768
+  stable_hidden: 512
+  stable_dim: 256
+  env_hidden: 256
+  env_dim: 128
+  contrast_dim: 128
+
+ccif:
+  lambda_inv: 0.10
+  lambda_env: 0.20
+  lambda_orth: 0.05
+  lambda_rec: 0.10
+  min_class_samples: 4
+  max_samples_per_class: 32
+
+cecc:
+  lambda: 0.20
+  temperature: 0.07
+  hard_negative_weight: 1.0
+
+cei:
+  lambda_cls: 0.20
+  lambda_sem: 0.10
+  lambda_env: 0.05
+  detach_donor_environment: true
+
+progressive:
+  ccif_start: 0
+  ccif_full: 500
+  cecc_start: 500
+  cecc_full: 2000
+  cei_start: 2000
+  cei_full: 3500
+
+training:
+  seed: 42
+  max_steps: 6000
+  flow_batch_size: 8
+  support_flow_batch_size: 8
+  eval_batch_size: 8
+  eval_interval: 250
+  optimizer: AdamW
+  weight_decay: 0.01
+  gradient_clip: 1.0
+  amp: true
+  scaler_initial_scale: 1024.0
+  freeze_steps: 500
+  encoder_blocks: [10, 11]
+  encoder_block_lrs: [0.000003, 0.000005]
+  head_lr: 0.00005
+  cosine_margin: 0.10
+  prototype_feature_weight: 0.05
+  prototype_weight_weight: 0.05

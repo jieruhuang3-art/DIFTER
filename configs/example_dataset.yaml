@@ -1,0 +1,13 @@
+dataset:
+  name: YOUR_DATASET
+
+paths:
+  train: path/to/source_train.tsv
+  dev: path/to/source_dev.tsv
+  source_test: path/to/source_test.tsv
+  target_test: path/to/target_test.tsv
+
+environment_factors:
+  - factor_name
+
+num_classes: null

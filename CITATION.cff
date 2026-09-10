@@ -1,0 +1,5 @@
+cff-version: 1.2.0
+title: "DIFTER: Disentangle, Align, and Intervene for Source-Only Cross-Environment Encrypted Traffic Classification"
+message: "Citation information will be updated upon publication."
+type: software
+repository-code: "https://github.com/jieruhuang3-art/DIFTER"
