@@ -28,11 +28,11 @@ At inference time, DIFTER retains only the HPTF encoder, masked window aggregati
 
 ## Datasets
 
-| Dataset | Classes | Distribution shift | Source -> Target |
-| --- | ---: | --- | --- |
-| APP53-Time | 27 | Temporal | Jun. 20--24 -> Jul. 19--23 |
-| MIRAGE-2019 | 20 | Device | Device A+B -> Device C |
-| MIRAGE-COVID | 9 | Device/activity composition | 10 observed compositions -> held-out composition |
+| Dataset | Classes | Flows | Distribution shift | Source -> Target |
+| --- | ---: | ---: | --- | --- |
+| APP53-Time | 27 | 8,908 | Temporal | Jun. 20--24 -> Jul. 19--23 |
+| MIRAGE-2019 | 20 | 116,438 | Device | Device A+B -> Device C |
+| MIRAGE-COVID | 9 | 39,837 | Device/activity composition | 10 observed compositions -> held-out composition |
 
 ## Main Results
 
