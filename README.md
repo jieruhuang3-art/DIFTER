@@ -36,7 +36,7 @@ At inference time, DIFTER retains only the HPTF encoder, masked window aggregati
 
 ## Main Results
 
-Macro-F1 is reported for source-test and held-out target environments. The target shifts are Jun. 20--24 to Jul. 19--23 for APP53-Time, Device A+B to Device C for MIRAGE-2019, and 10 observed compositions to a held-out composition for MIRAGE-COVID.
+The table reports Macro-F1 on the source-test split and the held-out target environment. Every checkpoint is selected exclusively by source-validation Macro-F1. The three benchmarks evaluate temporal transfer (APP53-Time), device transfer (MIRAGE-2019), and transfer to an unseen device--activity composition (MIRAGE-COVID).
 
 | Model | APP53 Source | APP53 Target | MIRAGE-2019 Source | MIRAGE-2019 Target | MIRAGE-COVID Source | MIRAGE-COVID Target |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -44,10 +44,12 @@ Macro-F1 is reported for source-test and held-out target environments. The targe
 | 1D-CNN | 0.1003 | 0.0745 | 0.6262 | 0.5952 | 0.6556 | 0.6082 |
 | BiLSTM | 0.1084 | 0.0827 | 0.6594 | 0.6028 | 0.6401 | 0.5956 |
 | Vanilla Transformer | 0.0825 | 0.0648 | 0.6484 | 0.5957 | 0.6322 | 0.5895 |
-| ET-BERT | 0.0233 | 0.0236 | 0.7601 | 0.7088 | 0.7129 | 0.6496 |
+| ET-BERT | 0.4067 | 0.2309 | 0.7601 | 0.7088 | 0.7129 | 0.6496 |
 | TrafficFormer | 0.2071 | 0.1194 | 0.7462 | 0.6925 | 0.7124 | 0.6538 |
 | HPTF | 0.4845 | 0.2725 | 0.6435 | 0.6077 | 0.6429 | 0.6072 |
 | **DIFTER** | **0.5045** | **0.2839** | **0.7163** | **0.7127** | **0.6618** | **0.6616** |
+
+DIFTER yields the highest target Macro-F1 on all three shifts, reaching 0.2839 on APP53-Time, 0.7127 on MIRAGE-2019, and 0.6616 on MIRAGE-COVID. Relative to the shared HPTF backbone, these results correspond to absolute target gains of 1.14, 10.50, and 5.44 percentage points, respectively. The corrected APP53-Time ET-BERT entry uses its native datagram-bigram input pipeline and replaces the previously invalid collapsed run.
 
 ### Same-backbone DG comparison
 
@@ -64,15 +66,29 @@ All methods use the same HPTF backbone, traffic representation, source split, an
 
 ### Ablation study
 
-| Variant | CCIF | CECC | CEI | Macro-F1 | Delta vs. Base |
-| --- | :---: | :---: | :---: | ---: | ---: |
-| HPTF Base | - | - | - | 0.4908 | - |
-| + CCIF | ✓ | - | - | 0.5133 | +0.0225 |
-| + CCIF + CECC | ✓ | ✓ | - | 0.5322 | +0.0414 |
-| + CCIF + CEI | ✓ | - | ✓ | 0.5359 | +0.0451 |
-| **DIFTER** | ✓ | ✓ | ✓ | **0.5642** | **+0.0734** |
+The controlled MIRAGE-COVID ablation keeps the backbone, data split, seed, optimization budget, and source-validation checkpoint rule fixed. Mean target Macro-F1 averages the two held-out device--activity compositions.
 
-CCIF establishes the factorized representation space, while CECC and CEI provide complementary improvements.
+| Method | CCIF | CECC | CEI | Mean F1 | Delta vs. Base |
+| --- | :---: | :---: | :---: | ---: | ---: |
+| HPTF Base | - | - | - | 0.6244 | - |
+| + CCIF | ✓ | - | - | 0.6272 | +0.0028 |
+| + CCIF + CECC | ✓ | ✓ | - | 0.6287 | +0.0043 |
+| + CCIF + CEI | ✓ | - | ✓ | 0.6411 | +0.0167 |
+| **DIFTER** | ✓ | ✓ | ✓ | **0.6428** | **+0.0184** |
+
+CCIF alone provides a modest improvement over HPTF, and adding CECC raises the mean target score to 0.6287. The larger increase obtained by the CCIF+CEI variant indicates that compositional intervention contributes most of the observed ablation gain in this setting. Combining all three components produces the best mean target Macro-F1, 0.6428, an absolute improvement of 1.84 percentage points over HPTF Base.
+
+### Representation analysis
+
+<p align="center">
+  <img src="assets/fig2_representation_analysis_2x2.png" width="100%">
+</p>
+
+<p align="center">
+  <b>HPTF and DIFTER representations on MIRAGE-COVID.</b>
+</p>
+
+Panels (a) and (b) visualize the HPTF flow representation and the DIFTER stable representation under the same source/held-out-target sampling contract. Panel (c) shows that the mean same-class cross-environment centroid distance decreases from 0.427 for HPTF to 0.344 for DIFTER. Panel (d) resolves this aggregate change by class: the largest reductions occur for Google Meet and Discord, while a small number of classes do not improve. The evidence therefore supports an overall reduction in class-conditional cross-environment shift rather than a claim of uniform contraction for every class. UMAP is used only for qualitative visualization; the centroid-distance comparisons are computed in the original normalized representation space.
 
 ## Method
 
